@@ -47,7 +47,7 @@
         </div>
     </div>
 </nav>
-<div class="navbar navbar-default" id="subnav">
+<%-- <div class="navbar navbar-default" id="subnav">
     <div class="col-md-12">
         <div class="navbar-header">
             <a href="#" style="margin-left:15px;" class="navbar-btn btn btn-default btn-plus dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-home" style="color:#dd1111;"></i> Home <small><i class="glyphicon glyphicon-chevron-down"></i></small></a>
@@ -60,14 +60,24 @@
         <div class="collapse navbar-collapse" id="navbar-collapse2">
             <ul class="nav navbar-nav navbar-right">
                 <li class="active"><a href="../index.html">Posts</a></li>
-                <li><a href="../user/login.html" role="button">로그인</a></li>
+                <c:choose>
+                	<c:when test="${not empty sessionScope.user}">
+		                <li><a href="/user/logout" role="button">로그아웃</a></li>
+                <li><a href="#" role="button">개인정보수정</a></li>	
+                	</c:when>
+                	<c:otherwise>
+		                <li><a href="../user/login.html" role="button">로그인</a></li>
                 <li><a href="../user/form.html" role="button">회원가입</a></li>
-                <li><a href="#" role="button">로그아웃</a></li>
-                <li><a href="#" role="button">개인정보수정</a></li>
+                	</c:otherwise>
+                </c:choose>
             </ul>
         </div>
     </div>
-</div>
+</div> --%>
+
+<jsp:include page="/user/header.jsp" flush="true">
+<jsp:param name="btnNO" value="0"/>
+</jsp:include>
 
 <div class="container" id="main">
     <div class="col-md-10 col-md-offset-1">
@@ -79,16 +89,28 @@
                 </tr>
                 </thead>
                 <tbody>
+                <c:if test="${users != null}">
                 <c:forEach items="${users}" var="user" varStatus="status">
                     <tr>
                         <th scope="row">${status.count}</th>
                         <td>${user.userId}</td>
                         <td>${user.name}</td>
                         <td>${user.email}</td>
-                        <td><a href="#" class="btn btn-success" role="button">수정</a>
+                        <td><a href="/user/updateForm?userId=${user.userId}" class="btn btn-success" role="button">수정</a>
                         </td>
                     </tr>
                 </c:forEach>
+                </c:if>
+                <c:if test="${user != null}">
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>${user.userId}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td><a href="/user/updateForm?userId=${user.userId}" class="btn btn-success" role="button">수정</a>
+                        </td>
+                    </tr>
+                </c:if>
                 </tbody>
             </table>
         </div>
