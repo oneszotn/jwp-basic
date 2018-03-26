@@ -16,10 +16,10 @@ import next.controller.UpdateFormUserController;
 import next.controller.UpdateUserController;
 
 public class RequestMapping {
-    private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
+	private static final Logger logger = LoggerFactory.getLogger(DispatcherServlet.class);
     private Map<String, Controller> mappings = new HashMap<>();
-
-    void initMapping() {
+	
+	void initMapping() {
         mappings.put("/", new HomeController());
         mappings.put("/users/form", new ForwardController("/user/form.jsp"));
         mappings.put("/users/loginForm", new ForwardController("/user/login.jsp"));
@@ -33,12 +33,13 @@ public class RequestMapping {
 
         logger.info("Initialized Request Mapping!");
     }
-
-    public Controller findController(String url) {
+	
+	public Controller findController(String url) {
         return mappings.get(url);
     }
 
     void put(String url, Controller controller) {
         mappings.put(url, controller);
     }
+
 }
