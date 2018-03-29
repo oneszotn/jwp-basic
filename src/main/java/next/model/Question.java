@@ -32,8 +32,34 @@ public class Question {
     public long getQuestionId() {
         return questionId;
     }
+    
+    
 
-    public String getWriter() {
+    public void setQuestionId(long questionId) {
+		this.questionId = questionId;
+	}
+
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public void setCountOfComment(int countOfComment) {
+		this.countOfComment = countOfComment;
+	}
+
+	public String getWriter() {
         return writer;
     }
 
@@ -83,5 +109,9 @@ public class Question {
         if (questionId != other.questionId)
             return false;
         return true;
+    }
+    
+    public boolean isSameUser(User user) {
+        return user.isSameUser(this.writer);
     }
 }

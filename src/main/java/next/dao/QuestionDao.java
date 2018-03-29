@@ -14,8 +14,9 @@ import core.jdbc.RowMapper;
 import next.model.Question;
 
 public class QuestionDao {
+	private JdbcTemplate jdbcTemplate = JdbcTemplate.getInstance();
+	
     public Question insert(Question question) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "INSERT INTO QUESTIONS " + 
                 "(writer, title, contents, createdDate) " + 
                 " VALUES (?, ?, ?, ?)";
@@ -37,7 +38,6 @@ public class QuestionDao {
     }
     
     public List<Question> findAll() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "SELECT questionId, writer, title, createdDate, countOfAnswer FROM QUESTIONS "
                 + "order by questionId desc";
 
@@ -54,7 +54,6 @@ public class QuestionDao {
     }
 
     public Question findById(long questionId) {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate();
         String sql = "SELECT questionId, writer, title, contents, createdDate, countOfAnswer FROM QUESTIONS "
                 + "WHERE questionId = ?";
 
@@ -68,4 +67,34 @@ public class QuestionDao {
 
         return jdbcTemplate.queryForObject(sql, rm, questionId);
     }
+    
+    public void addCount(long questionId) {
+    	String sql = "UPDATE QUESTIONS SET countOfAnswer = countOfAnswer+1 WHERE questionId = ?";
+    	jdbcTemplate.update(sql, questionId); 
+    }
+
+    public void delete(long questionId) {
+    	String sql = "DELETE FROM QUESTIONS WHERE questionId = ?";
+    	jdbcTemplate.update(sql, questionId); 
+    }
+    
+    public Question update(Question question) {
+        String sql = "UPDATE QUESTIONS SET writer = ?, title= ?, contents = ? where questionId = ? " ;
+        PreparedStatementCreator psc = new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+                PreparedStatement pstmt = con.prepareStatement(sql);
+                pstmt.setString(1, question.getWriter());
+                pstmt.setString(2, question.getTitle());
+                pstmt.setString(3, question.getContents());
+                pstmt.setLong(4, question.getQuestionId());
+                return pstmt;
+            }
+        };
+
+        KeyHolder keyHolder = new KeyHolder();
+        jdbcTemplate.update(psc, keyHolder);
+        return findById(keyHolder.getId());
+    }
+    
 }
